@@ -1,1 +1,829 @@
+<!DOCTYPE html>
 
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Student Performance Analytics
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="topbar">
+
+    <div>
+
+        <div class="eyebrow">
+            ACADEMIC ANALYTICS
+        </div>
+
+        <h1>
+            Student Performance Dashboard
+        </h1>
+
+        <p>
+            Smart overview of marks, grades,
+            study habits and student progress.
+        </p>
+
+    </div>
+
+
+    <div class="actions">
+
+        <a
+            class="btn secondary"
+            href="{{ url_for('refresh') }}"
+        >
+            ↻ Refresh
+        </a>
+
+
+        <a
+            class="btn primary"
+            href="{{ url_for('download_report') }}"
+        >
+            ↓ Excel Report
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+
+    <!-- KPI CARDS -->
+
+    <section class="kpis">
+
+
+        <div class="card kpi">
+
+            <span>
+                Total Students
+            </span>
+
+            <strong id="totalStudents">
+                0
+            </strong>
+
+            <small>
+                Students analyzed
+            </small>
+
+        </div>
+
+
+
+        <div class="card kpi">
+
+            <span>
+                Class Average
+            </span>
+
+            <strong id="classAverage">
+                0
+            </strong>
+
+            <small>
+                Overall average marks
+            </small>
+
+        </div>
+
+
+
+        <div class="card kpi">
+
+            <span>
+                Pass Rate
+            </span>
+
+            <strong id="passRate">
+                0%
+            </strong>
+
+            <small>
+                Students scoring 50+
+            </small>
+
+        </div>
+
+
+
+        <div class="card kpi">
+
+            <span>
+                Top Performer
+            </span>
+
+            <strong id="topStudent">
+                —
+            </strong>
+
+            <small id="topScore">
+                Highest average
+            </small>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ================= INSIGHTS ================= -->
+
+    <section class="insights">
+
+
+        <div class="card highlight">
+
+            <div class="section-title">
+                Performance Snapshot
+            </div>
+
+
+            <div class="insight-grid">
+
+
+                <div>
+
+                    <span>
+                        Best Subject
+                    </span>
+
+                    <b id="bestSubject">
+                        —
+                    </b>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Highest Average
+                    </span>
+
+                    <b id="highestAverage">
+                        —
+                    </b>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Average Study Time
+                    </span>
+
+                    <b id="studyHours">
+                        —
+                    </b>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Most Common Grade
+                    </span>
+
+                    <b id="commonGrade">
+                        —
+                    </b>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <div class="card note">
+
+            <div class="section-title">
+                Quick Insight
+            </div>
+
+            <p id="quickInsight">
+                Analyzing class data...
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ================= CHARTS ================= -->
+
+    <section class="charts">
+
+
+        <div class="card chart-card wide">
+
+            <div class="section-title">
+                Student Average Ranking
+            </div>
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='../../../output/charts/bar_chart.png'
+                ) }}"
+                alt="Student average chart"
+            >
+
+        </div>
+
+
+
+        <div class="card chart-card">
+
+            <div class="section-title">
+                Grade Distribution
+            </div>
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='../../../output/charts/pie_chart.png'
+                ) }}"
+                alt="Grade distribution"
+            >
+
+        </div>
+
+
+
+        <div class="card chart-card">
+
+            <div class="section-title">
+                Subject Performance
+            </div>
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='../../../output/charts/line_chart.png'
+                ) }}"
+                alt="Subject performance"
+            >
+
+        </div>
+
+
+
+        <div class="card chart-card">
+
+            <div class="section-title">
+                Average Marks Distribution
+            </div>
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='../../../output/charts/histogram.png'
+                ) }}"
+                alt="Average marks distribution"
+            >
+
+        </div>
+
+
+
+        <div class="card chart-card">
+
+            <div class="section-title">
+                Study Hours vs Performance
+            </div>
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='../../../output/charts/scatter_plot.png'
+                ) }}"
+                alt="Study hours vs performance"
+            >
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ================= STUDENT TABLE ================= -->
+
+    <section class="card table-card">
+
+
+        <div class="table-head">
+
+
+            <div>
+
+                <div class="section-title">
+                    Student Details
+                </div>
+
+                <p class="muted">
+                    Search, filter and compare
+                    individual performance.
+                </p>
+
+            </div>
+
+
+            <div class="filters">
+
+
+                <input
+                    id="search"
+                    type="search"
+                    placeholder="Search student..."
+                >
+
+
+                <select id="gradeFilter">
+
+                    <option value="All">
+                        All Grades
+                    </option>
+
+                    <option value="A">
+                        A
+                    </option>
+
+                    <option value="B">
+                        B
+                    </option>
+
+                    <option value="C">
+                        C
+                    </option>
+
+                    <option value="D">
+                        D
+                    </option>
+
+                    <option value="F">
+                        F
+                    </option>
+
+                </select>
+
+
+                <select id="genderFilter">
+
+                    <option value="All">
+                        All Genders
+                    </option>
+
+                    <option value="Male">
+                        Male
+                    </option>
+
+                    <option value="Female">
+                        Female
+                    </option>
+
+                </select>
+
+
+            </div>
+
+        </div>
+
+
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Student</th>
+
+                        <th>Gender</th>
+
+                        <th>Math</th>
+
+                        <th>Science</th>
+
+                        <th>English</th>
+
+                        <th>Study Hrs</th>
+
+                        <th>Average</th>
+
+                        <th>Grade</th>
+
+                        <th>Result</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="studentRows">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+        <div class="table-footer">
+
+            <span id="rowCount">
+                0 students
+            </span>
+
+            <span>
+                Use filters to find a student quickly.
+            </span>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    Student Performance Analytics
+    • Python
+    • Flask
+    • Pandas
+    • Matplotlib
+
+</footer>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+
+const students =
+    {{ students | tojson }};
+
+
+const $ = id =>
+    document.getElementById(id);
+
+
+
+function setupDashboard() {
+
+
+    const total =
+        students.length;
+
+
+    const classAverage =
+        students.reduce(
+            (sum, student) =>
+                sum + student.Average,
+            0
+        ) / total;
+
+
+    const passed =
+        students.filter(
+            student =>
+                student.Result === "Pass"
+        ).length;
+
+
+    const topStudent =
+        [...students].sort(
+            (a, b) =>
+                b.Average - a.Average
+        )[0];
+
+
+    const subjects = [
+        "Math",
+        "Science",
+        "English"
+    ];
+
+
+    const subjectAverage = {};
+
+
+    subjects.forEach(subject => {
+
+        subjectAverage[subject] =
+            students.reduce(
+                (sum, student) =>
+                    sum + student[subject],
+                0
+            ) / total;
+
+    });
+
+
+    const bestSubject =
+        [...subjects].sort(
+            (a, b) =>
+                subjectAverage[b] -
+                subjectAverage[a]
+        )[0];
+
+
+    const gradeCount = {};
+
+
+    students.forEach(student => {
+
+        gradeCount[student.Grade] =
+            (gradeCount[student.Grade] || 0) + 1;
+
+    });
+
+
+    const commonGrade =
+        Object.entries(gradeCount)
+        .sort(
+            (a, b) =>
+                b[1] - a[1]
+        )[0][0];
+
+
+    const averageStudyHours =
+        students.reduce(
+            (sum, student) =>
+                sum + student.Study_Hours,
+            0
+        ) / total;
+
+
+
+    $("totalStudents").textContent =
+        total;
+
+
+    $("classAverage").textContent =
+        classAverage.toFixed(1);
+
+
+    $("passRate").textContent =
+        (
+            passed / total * 100
+        ).toFixed(0) + "%";
+
+
+    $("topStudent").textContent =
+        topStudent.Name;
+
+
+    $("topScore").textContent =
+        topStudent.Average.toFixed(1) +
+        " average";
+
+
+    $("bestSubject").textContent =
+        bestSubject;
+
+
+    $("highestAverage").textContent =
+        topStudent.Average.toFixed(1);
+
+
+    $("studyHours").textContent =
+        averageStudyHours.toFixed(1) +
+        " hrs";
+
+
+    $("commonGrade").textContent =
+        commonGrade;
+
+
+    $("quickInsight").textContent =
+
+        `${topStudent.Name} leads the class with ` +
+
+        `${topStudent.Average.toFixed(1)} average marks. ` +
+
+        `${bestSubject} is the strongest subject at ` +
+
+        `${subjectAverage[bestSubject].toFixed(1)} average. ` +
+
+        `Current pass rate is ` +
+
+        `${(
+            passed / total * 100
+        ).toFixed(0)}%.`;
+
+
+    renderTable();
+
+}
+
+
+
+function renderTable() {
+
+
+    const search =
+        $("search")
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const grade =
+        $("gradeFilter").value;
+
+
+    const gender =
+        $("genderFilter").value;
+
+
+    const filteredStudents =
+        students
+        .filter(student =>
+
+            (
+
+                student.Name
+                .toLowerCase()
+                .includes(search)
+
+                ||
+
+                String(student.Student_ID)
+                .includes(search)
+
+            )
+
+            &&
+
+            (
+                grade === "All" ||
+                student.Grade === grade
+            )
+
+            &&
+
+            (
+                gender === "All" ||
+                student.Gender === gender
+            )
+
+        )
+
+
+        .sort(
+            (a, b) =>
+                b.Average - a.Average
+        );
+
+
+    $("studentRows").innerHTML =
+
+        filteredStudents
+        .map(student => `
+
+            <tr>
+
+                <td>
+                    ${student.Student_ID}
+                </td>
+
+                <td class="name">
+                    ${student.Name}
+                </td>
+
+                <td>
+                    ${student.Gender}
+                </td>
+
+                <td>
+                    ${student.Math}
+                </td>
+
+                <td>
+                    ${student.Science}
+                </td>
+
+                <td>
+                    ${student.English}
+                </td>
+
+                <td>
+                    ${student.Study_Hours}
+                </td>
+
+                <td>
+                    <b>
+                        ${student.Average.toFixed(1)}
+                    </b>
+                </td>
+
+                <td>
+
+                    <span
+                        class="badge grade-${student.Grade}"
+                    >
+                        ${student.Grade}
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <span
+                        class="result ${student.Result.toLowerCase()}"
+                    >
+                        ${student.Result}
+                    </span>
+
+                </td>
+
+            </tr>
+
+        `)
+        .join("");
+
+
+    $("rowCount").textContent =
+        `${filteredStudents.length} students`;
+
+}
+
+
+
+$("search").addEventListener(
+    "input",
+    renderTable
+);
+
+
+$("gradeFilter").addEventListener(
+    "change",
+    renderTable
+);
+
+
+$("genderFilter").addEventListener(
+    "change",
+    renderTable
+);
+
+
+setupDashboard();
+
+</script>
+
+
+</body>
+
+</html>
