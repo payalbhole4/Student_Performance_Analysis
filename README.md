@@ -62,7 +62,6 @@ student performance and study habits.
 
 ## Project Structure
 
-```text
 Student_Performance_Analysis/
 │
 ├── app.py
@@ -73,22 +72,27 @@ Student_Performance_Analysis/
 ├── data/
 │   └── students.csv
 │
-├── output/
-│   ├── charts/
-│   │   ├── bar_chart.png
-│   │   ├── pie_chart.png
-│   │   ├── line_chart.png
-│   │   ├── histogram.png
-│   │   └── scatter_plot.png
-│   │
-│   └── reports/
-│       └── student_report.xlsx
+├── templates/
+│   └── index.html
 │
-└── templates/
-    ├── index.html
+├── static/
+│   ├── css/
+│   │   └── style.css
+│   │
+│   └── charts/
+│       ├── bar_chart.png
+│       ├── pie_chart.png
+│       ├── line_chart.png
+│       ├── histogram.png
+│       └── scatter_plot.png
+│
+└── output/
+    ├── charts/
+    │   ├── bar_chart.png
+    │   ├── pie_chart.png
+    │   ├── line_chart.png
+    │   ├── histogram.png
+    │   └── scatter_plot.png
     │
-    └── static/
-        ├── css/
-        │   └── style.css
-        │
-        └── js/
+    └── reports/
+        └── student_report.xlsx
