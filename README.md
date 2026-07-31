@@ -62,6 +62,7 @@ student performance and study habits.
 
 ## Project Structure
 
+```text
 Student_Performance_Analysis/
 │
 ├── app.py
@@ -96,3 +97,36 @@ Student_Performance_Analysis/
     │
     └── reports/
         └── student_report.xlsx
+```
+
+## How to Run
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/payalbhole4/Student_Performance_Analysis.git
+```
+
+2. Navigate to the project folder
+
+```bash
+cd Student_Performance_Analysis
+```
+
+3. Install the required dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Run the Flask application
+
+```bash
+python app.py
+```
+
+5. Open your browser and visit
+
+```text
+http://127.0.0.1:5000
+```
